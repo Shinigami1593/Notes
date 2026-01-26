@@ -1,0 +1,72 @@
+INFO 2026-01-16 22:39:23,603 views New user registered: hacker
+INFO 2026-01-16 22:39:23,723 views User logged in: hacker
+INFO 2026-01-16 22:39:32,026 views User logged in: hacker
+INFO 2026-01-16 22:39:36,178 views User logged in: hacker
+INFO 2026-01-16 22:39:37,087 views User logged in: hacker
+INFO 2026-01-16 22:39:37,605 views User logged in: hacker
+INFO 2026-01-16 22:39:37,830 views User logged in: hacker
+INFO 2026-01-16 22:39:37,964 views User logged in: hacker
+INFO 2026-01-16 22:39:38,124 views User logged in: hacker
+INFO 2026-01-16 22:39:38,241 views User logged in: hacker
+INFO 2026-01-16 22:40:04,229 views User logged in: hacker
+INFO 2026-01-16 22:40:16,370 views User logged in: hacker
+INFO 2026-01-16 22:43:45,264 views User logged in: hacker
+WARNING 2026-01-17 13:57:39,840 database AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Created new record in the database.
+WARNING 2026-01-17 13:57:50,821 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 13:58:02,638 database AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Created new record in the database.
+WARNING 2026-01-17 13:58:52,687 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 13:58:58,373 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 13:59:04,980 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 13:59:04,983 database AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"} after repeated login failures.
+WARNING 2026-01-17 14:00:40,165 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 14:00:40,173 database AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"} after repeated login failures.
+WARNING 2026-01-17 14:00:47,399 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 14:00:47,409 database AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"} after repeated login failures.
+WARNING 2026-01-17 14:02:57,443 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 14:02:57,451 database AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"} after repeated login failures.
+WARNING 2026-01-17 14:03:01,811 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Updated existing record in the database.
+WARNING 2026-01-17 14:03:01,819 database AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"} after repeated login failures.
+WARNING 2026-01-17 14:04:15,141 database AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/admin/login/"}. Created new record in the database.
+INFO 2026-01-17 14:08:18,684 views New user registered: test
+INFO 2026-01-17 14:12:10,470 views New user registered: test
+INFO 2026-01-17 14:13:57,105 views New user registered: test
+INFO 2026-01-17 14:41:31,751 views New user registered: test
+INFO 2026-01-17 14:46:37,497 views User logged in: test
+INFO 2026-01-17 14:50:28,818 views User logged in: test
+INFO 2026-01-17 14:55:42,646 views User logged in: test
+INFO 2026-01-17 14:57:39,548 views User logged in: test
+INFO 2026-01-17 15:00:37,908 views User test created note 2
+INFO 2026-01-18 06:34:28,313 views New user registered: testtt
+INFO 2026-01-18 06:34:32,898 views User logged in: testtt
+INFO 2026-01-18 06:41:16,801 views User logged out: testtt
+INFO 2026-01-18 06:49:17,271 views User logged in: test
+INFO 2026-01-18 07:03:05,700 views User logged in: testtt
+INFO 2026-01-18 07:03:20,681 views User testtt created note 3
+INFO 2026-01-18 07:03:32,958 views User testtt deleted note 3
+INFO 2026-01-18 07:15:05,887 views User testtt created note 4
+INFO 2026-01-18 07:22:17,286 views User testtt updated note 4
+INFO 2026-01-18 07:22:22,245 views User testtt deleted note 4
+INFO 2026-01-18 07:23:24,546 views User logged out: testtt
+INFO 2026-01-18 07:48:42,643 views User logged in: testtt
+INFO 2026-01-18 07:52:23,350 views User logged out: testtt
+INFO 2026-01-18 07:52:34,166 views User logged out: testtt
+INFO 2026-01-19 05:41:09,833 views User logged in: testtt
+INFO 2026-01-19 05:42:21,902 views_profile User testtt updated profile
+INFO 2026-01-19 06:55:18,058 views User logged in: testtt
+INFO 2026-01-19 07:10:07,355 views User logged in: testtt
+INFO 2026-01-19 08:54:09,330 views User logged in: testtt
+INFO 2026-01-19 09:48:00,626 views User logged out: testtt
+INFO 2026-01-19 09:48:59,561 views New user registered: suju
+INFO 2026-01-19 09:49:03,958 views User logged in: suju
+INFO 2026-01-19 09:49:30,176 views User logged out: suju
+INFO 2026-01-19 09:49:37,568 views User logged in: suju
+WARNING 2026-01-23 04:26:49,397 database AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/api/auth/login/"}. Created new record in the database.
+WARNING 2026-01-23 04:26:49,412 views Failed login attempt for: ayush@gmail.com
+WARNING 2026-01-23 04:27:37,788 database AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/api/auth/login/"}. Created new record in the database.
+WARNING 2026-01-23 04:27:37,802 views Failed login attempt for: testnotes@gmail.com
+WARNING 2026-01-23 04:27:45,426 database AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/api/auth/login/"}. Updated existing record in the database.
+WARNING 2026-01-23 04:27:45,441 views Failed login attempt for: testnotes@gmail.com
+WARNING 2026-01-25 11:50:29,639 database AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", path_info: "/api/auth/login/"}. Created new record in the database.
+WARNING 2026-01-25 11:50:29,650 views Failed login attempt for: ayush@gmail.com
+INFO 2026-01-25 11:51:19,306 views New user registered: asd
+INFO 2026-01-25 11:51:31,373 views User logged in: asd
