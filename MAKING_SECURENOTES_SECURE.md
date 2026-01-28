@@ -1913,6 +1913,300 @@ def register_view(request):
 
 ---
 
+## E7) Role-Based Access Control (RBAC)
+
+### 7.1 Subscription Tier System
+
+**Security Concern**: Different users have different feature access levels. Need to enforce tier-based feature access and limits.
+
+**Implementation**:
+
+**Database Models** (`authentication/models.py`):
+```python
+# File: backend/authentication/models.py (lines 154-227)
+
+class PremiumSubscription(models.Model):
+    """
+    Premium Subscription Model - Track subscription status
+    SECURITY FEATURES:
+    - RBAC: Stores user's subscription tier and status
+    - Billing: Tracks billing cycle dates
+    - Audit: Tracks when subscription changes occur
+    - Feature gating: Used to enforce tier-based limits
+    """
+    TIER_CHOICES = [
+        ('FREE', 'Free'),
+        ('PRO', 'Professional'),
+        ('ENTERPRISE', 'Enterprise'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('INACTIVE', 'Inactive'),
+        ('CANCELLED', 'Cancelled'),
+        ('SUSPENDED', 'Suspended'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='premium_subscription')
+    tier = models.CharField(max_length=20, choices=TIER_CHOICES, default='FREE')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='INACTIVE')
+    billing_cycle_start = models.DateTimeField(null=True, blank=True)
+    billing_cycle_end = models.DateTimeField(null=True, blank=True)
+    
+    def is_active(self):
+        """Check if subscription is currently active"""
+        return self.status == 'ACTIVE'
+    
+    def is_expired(self):
+        """Check if subscription billing cycle has expired"""
+        if not self.billing_cycle_end:
+            return False
+        return timezone.now() > self.billing_cycle_end
+```
+
+**UserProfile Enhancement** (`authentication/models.py` lines 51-62):
+```python
+# File: backend/authentication/models.py
+
+# Subscription & RBAC
+subscription_tier = models.CharField(
+    max_length=20,
+    choices=[
+        ('FREE', 'Free'),
+        ('PRO', 'Pro'),
+        ('ENTERPRISE', 'Enterprise'),
+    ],
+    default='FREE',
+    help_text="User's current subscription tier"
+)
+```
+
+---
+
+### 7.2 Permission Classes
+
+**Security Concern**: Need to restrict API endpoints based on user subscription tier.
+
+**Implementation** (`notes/permissions.py`):
+```python
+# File: backend/notes/permissions.py (lines 48-100)
+
+from rest_framework.permissions import BasePermission
+
+class IsProUser(BasePermission):
+    """Only PRO and ENTERPRISE tier users can access"""
+    def has_permission(self, request, view):
+        return request.user.profile.subscription_tier in ['PRO', 'ENTERPRISE']
+
+class IsEnterpriseUser(BasePermission):
+    """Only ENTERPRISE tier users can access"""
+    def has_permission(self, request, view):
+        return request.user.profile.subscription_tier == 'ENTERPRISE'
+
+class IsFreeUser(BasePermission):
+    """Only FREE tier users can access"""
+    def has_permission(self, request, view):
+        return request.user.profile.subscription_tier == 'FREE'
+
+class IsProOrEnterprise(BasePermission):
+    """Requires PRO or ENTERPRISE (excludes FREE)"""
+    def has_permission(self, request, view):
+        return request.user.profile.subscription_tier in ['PRO', 'ENTERPRISE']
+
+class IsAdmin(BasePermission):
+    """Only staff/admin users can access"""
+    def has_permission(self, request, view):
+        return request.user.is_staff or request.user.is_superuser
+```
+
+**Usage Example**:
+```python
+from rest_framework.decorators import api_view, permission_classes
+from notes.permissions import IsProUser
+
+@api_view(['POST'])
+@permission_classes([IsProUser])
+def create_advanced_note(request):
+    """Only PRO and ENTERPRISE users can create advanced notes"""
+    # Implementation...
+```
+
+---
+
+### 7.3 Feature Limiting System
+
+**Security Concern**: Different tiers have different feature limits (note count, upload size, API access).
+
+**Implementation** (`notes/rbac_utils.py`):
+```python
+# File: backend/notes/rbac_utils.py (170+ lines)
+
+class SubscriptionLimits:
+    """Define feature limits for each subscription tier"""
+    LIMITS = {
+        'FREE': {
+            'max_notes': 50,
+            'max_upload_size_mb': 5,
+            'api_access': False,
+            'features': ['basic_notes', 'text_only'],
+        },
+        'PRO': {
+            'max_notes': 1000,
+            'max_upload_size_mb': 500,
+            'api_access': True,
+            'features': ['basic_notes', 'file_uploads', 'advanced_search', 'api_access'],
+        },
+        'ENTERPRISE': {
+            'max_notes': 999999,
+            'max_upload_size_mb': 5000,
+            'api_access': True,
+            'features': ['basic_notes', 'file_uploads', 'advanced_search', 'api_access', 
+                        'team_management', 'custom_integrations'],
+        },
+    }
+
+def check_note_limit(user):
+    """Check if user can create more notes based on tier"""
+    tier = user.profile.subscription_tier
+    max_notes = SubscriptionLimits.get_max_notes(tier)
+    current_count = user.notes.count()
+    
+    return {
+        'allowed': current_count < max_notes,
+        'current_count': current_count,
+        'limit': max_notes,
+        'message': f"Note limit: {current_count}/{max_notes}"
+    }
+
+def check_upload_size_limit(user, file_size_mb):
+    """Check if file size is within tier limit"""
+    tier = user.profile.subscription_tier
+    limit_mb = SubscriptionLimits.get_max_upload_size_mb(tier)
+    allowed = file_size_mb <= limit_mb
+    
+    return {
+        'allowed': allowed,
+        'file_size_mb': file_size_mb,
+        'limit_mb': limit_mb,
+        'message': f"Upload limit: {limit_mb}MB for {tier} tier"
+    }
+
+def get_user_tier_info(user):
+    """Get complete tier information for a user"""
+    tier = user.profile.subscription_tier
+    return {
+        'tier': tier,
+        'limits': {
+            'max_notes': SubscriptionLimits.get_max_notes(tier),
+            'max_upload_size_mb': SubscriptionLimits.get_max_upload_size_mb(tier),
+            'api_access': SubscriptionLimits.has_api_access(tier),
+        },
+        'features': SubscriptionLimits.get_features(tier),
+    }
+```
+
+**Usage in Views**:
+```python
+from notes.rbac_utils import check_note_limit
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_note(request):
+    """Create note with tier-based limit checking"""
+    limit = check_note_limit(request.user)
+    if not limit['allowed']:
+        return Response(limit, status=status.HTTP_402_PAYMENT_REQUIRED)
+    
+    # Create note...
+    return Response(note_data, status=status.HTTP_201_CREATED)
+```
+
+---
+
+### 7.4 Admin Panel Management
+
+**Security Concern**: Admins need to manage user subscription tiers securely.
+
+**Implementation** (`notes/admin.py`):
+```python
+# File: backend/notes/admin.py (lines 132-250)
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'subscription_tier', 'two_factor_enabled', 'note_count', 'created_at']
+    list_editable = ['subscription_tier']  # ✅ Admins can edit tier directly
+    list_filter = ['subscription_tier', 'two_factor_enabled']
+    search_fields = ['user__username', 'user__email']
+
+@admin.register(PremiumSubscription)
+class PremiumSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'tier', 'status', 'is_active_display', 'created_at']
+    list_filter = ['tier', 'status']
+    search_fields = ['user__username']
+    readonly_fields = ['created_at', 'updated_at']
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'amount', 'status', 'payment_method', 'subscription_tier', 'created_at']
+    list_filter = ['status', 'payment_method', 'subscription_tier']
+    search_fields = ['user__username']
+    readonly_fields = ['created_at', 'updated_at']
+```
+
+**Admin Actions**:
+1. Navigate to Django Admin: `/admin/authentication/userprofile/`
+2. Find user and click `subscription_tier` column
+3. Change tier and save
+4. User immediately gets new permissions and limits
+
+---
+
+### 7.5 Payment Integration
+
+**Security Concern**: When users make payments, both RBAC models must be updated consistently.
+
+**Implementation** (`authentication/views_esewa.py`):
+```python
+# File: backend/authentication/views_esewa.py
+
+def verify_esewa_payment(pidx, source):
+    """
+    Verify eSewa payment and update RBAC models
+    SECURITY: Syncs both UserProfile and PremiumSubscription tiers
+    """
+    # ... payment verification ...
+    
+    # Update both RBAC models atomically
+    profile = UserProfile.objects.get(user=user)
+    profile.subscription_tier = new_tier
+    profile.save()
+    
+    premium = PremiumSubscription.objects.get(user=user)
+    premium.tier = new_tier
+    premium.status = 'ACTIVE'
+    premium.billing_cycle_start = timezone.now()
+    premium.billing_cycle_end = timezone.now() + timedelta(days=365)
+    premium.save()
+    
+    # ... create transaction record ...
+```
+
+---
+
+### 7.6 Tier Limits Summary
+
+| Feature | FREE | PRO | ENTERPRISE |
+|---------|------|-----|------------|
+| **Max Notes** | 50 | 1,000 | 999,999 |
+| **Upload Size** | 5 MB | 500 MB | 5,000 MB |
+| **API Access** | ❌ No | ✅ Yes | ✅ Yes |
+| **Advanced Search** | ❌ No | ✅ Yes | ✅ Yes |
+| **File Uploads** | ❌ No | ✅ Yes | ✅ Yes |
+| **Team Management** | ❌ No | ❌ No | ✅ Yes |
+| **Custom Integrations** | ❌ No | ❌ No | ✅ Yes |
+
+---
+
 ## Security Summary
 
 SecureNotes implements comprehensive security features across multiple layers:
@@ -1921,6 +2215,10 @@ SecureNotes implements comprehensive security features across multiple layers:
 |---------|------------------|---------|
 | **Password Security** | 12+ char, complexity validation, history tracking, 90-day expiry | Prevents weak passwords & reuse |
 | **MFA/2FA** | TOTP (Time-Based One-Time Passwords) with QR code | Adds second factor of authentication |
+| **Role-Based Access Control** | 3-tier system (FREE/PRO/ENTERPRISE), 5 permission classes, feature limits | Enforces tier-based feature access |
+| **Subscription Tiers** | PremiumSubscription model with status tracking, configurable limits | Different access levels per tier |
+| **Feature Limiting** | rbac_utils.py with per-tier note/upload/API limits | Prevents limit circumvention |
+| **Admin Tier Management** | Django admin with editable tier field, audit trail via transactions | Secure admin control |
 | **Brute Force Protection** | django-axes: 5 attempts → 6 min lockout | Prevents password guessing |
 | **Rate Limiting** | Per-IP rate limits on auth endpoints | Prevents automated attacks |
 | **CSRF Protection** | Token-based CSRF protection | Prevents cross-site requests |
@@ -1929,7 +2227,7 @@ SecureNotes implements comprehensive security features across multiple layers:
 | **IDOR Prevention** | Object-level permissions, owner filtering | Prevents unauthorized access |
 | **Audit Logging** | All security events logged with IP & user agent | Enables forensics & monitoring |
 | **File Upload Security** | UUID naming, extension validation, size limits | Prevents path traversal & uploads |
-| **Payment Security** | HMAC-SHA256 signatures | Prevents payment tampering |
+| **Payment Security** | HMAC-SHA256 signatures, RBAC model sync | Prevents payment tampering |
 | **Input Validation** | DRF serializers, Django ORM | Prevents SQL injection & XSS |
 | **Security Headers** | X-Frame-Options, HSTS, CSP | Prevents clickjacking & downgrade attacks |
 | **Password Hashing** | PBKDF2 with 260,000 iterations | Resistant to brute-force attacks |
