@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
+    'corsheaders', #CORS implemented
     'axes',  # Brute force protection
     'notes',
     'authentication',
@@ -255,19 +255,19 @@ LOGGING = {
             'formatter': 'verbose',
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'ERROR',  
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
     },
     'loggers': {
         'security': {
-            'handlers': ['file', 'console'],
+            'handlers': ['file'],  
             'level': 'INFO',
             'propagate': False,
         },
         'axes': {
-            'handlers': ['file', 'console'],
+            'handlers': ['file'],  
             'level': 'WARNING',
             'propagate': False,
         },
