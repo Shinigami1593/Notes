@@ -18,7 +18,7 @@ import hashlib
 import logging
 import requests
 
-from authentication.models import UserProfile, Transaction
+from authentication.models import UserProfile, Transaction, PremiumSubscription
 from notes.models import AuditLog
 
 logger = logging.getLogger('security')
@@ -195,7 +195,7 @@ def verify_esewa_payment(request):
             transaction_obj.esewa_ref_id = ref_id
             transaction_obj.save()
             
-            # Activate subscription
+            # Activate subscription in both PremiumSubscription and UserProfile
             subscription, created = PremiumSubscription.objects.get_or_create(
                 user=request.user
             )
@@ -203,6 +203,11 @@ def verify_esewa_payment(request):
             subscription.status = 'ACTIVE'
             subscription.billing_cycle_start = timezone.now()
             subscription.save()
+            
+            # Also update UserProfile subscription_tier for RBAC
+            profile = UserProfile.objects.get(user=request.user)
+            profile.subscription_tier = transaction_obj.subscription_tier
+            profile.save()
             
             # Log successful payment
             logger.info(f"Payment verified for user {request.user.username}: {ref_id}")

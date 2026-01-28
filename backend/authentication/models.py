@@ -63,6 +63,18 @@ class UserProfile(models.Model):
     notify_2fa_changes = models.BooleanField(default=True)
     notify_new_notes = models.BooleanField(default=False)
     
+    # Subscription & RBAC
+    subscription_tier = models.CharField(
+        max_length=20,
+        choices=[
+            ('FREE', 'Free'),
+            ('PRO', 'Pro'),
+            ('ENTERPRISE', 'Enterprise'),
+        ],
+        default='FREE',
+        help_text="User's current subscription tier"
+    )
+    
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -137,6 +149,81 @@ class UserProfile(models.Model):
         self.last_failed_login = None
         self.account_locked_until = None
         self.save()
+
+
+class PremiumSubscription(models.Model):
+    """
+    Premium Subscription Model - Track subscription status
+    SECURITY FEATURES:
+    - RBAC: Stores user's subscription tier and status
+    - Billing: Tracks billing cycle dates
+    - Audit: Tracks when subscription changes occur
+    - Feature gating: Used to enforce tier-based limits
+    """
+    TIER_CHOICES = [
+        ('FREE', 'Free'),
+        ('PRO', 'Professional'),
+        ('ENTERPRISE', 'Enterprise'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('INACTIVE', 'Inactive'),
+        ('CANCELLED', 'Cancelled'),
+        ('SUSPENDED', 'Suspended'),
+    ]
+    
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='premium_subscription'
+    )
+    tier = models.CharField(
+        max_length=20,
+        choices=TIER_CHOICES,
+        default='FREE',
+        help_text="Subscription tier (FREE, PRO, ENTERPRISE)"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='INACTIVE',
+        help_text="Current subscription status"
+    )
+    
+    # Billing Information
+    billing_cycle_start = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When current billing cycle started"
+    )
+    billing_cycle_end = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When current billing cycle ends"
+    )
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'premium_subscriptions'
+        verbose_name = 'Premium Subscription'
+        verbose_name_plural = 'Premium Subscriptions'
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.tier} ({self.status})"
+    
+    def is_active(self):
+        """Check if subscription is currently active"""
+        return self.status == 'ACTIVE'
+    
+    def is_expired(self):
+        """Check if subscription billing cycle has expired"""
+        if not self.billing_cycle_end:
+            return False
+        return timezone.now() > self.billing_cycle_end
 
 
 class PasswordHistory(models.Model):

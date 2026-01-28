@@ -26,3 +26,53 @@ class IsOwner(permissions.BasePermission):
             )
         
         return is_owner
+
+
+class IsFreeUser(permissions.BasePermission):
+    """
+    RBAC: Check if user has FREE tier subscription
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return request.user.profile.subscription_tier == 'FREE'
+
+
+class IsProUser(permissions.BasePermission):
+    """
+    RBAC: Check if user has PRO tier or higher
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return request.user.profile.subscription_tier in ['PRO', 'ENTERPRISE']
+
+
+class IsEnterpriseUser(permissions.BasePermission):
+    """
+    RBAC: Check if user has ENTERPRISE tier
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return request.user.profile.subscription_tier == 'ENTERPRISE'
+
+
+class IsProOrEnterprise(permissions.BasePermission):
+    """
+    RBAC: Check if user has PRO or ENTERPRISE tier (excludes FREE)
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return request.user.profile.subscription_tier in ['PRO', 'ENTERPRISE']
+
+
+class IsAdmin(permissions.BasePermission):
+    """
+    RBAC: Check if user is staff/admin
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return request.user.is_staff or request.user.is_superuser
