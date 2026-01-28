@@ -4,13 +4,13 @@
 
 | S.N. | Feature | Requirements | Implemented | How it was achieved | Why it was done |
 |------|---------|--------------|-------------|-------------------|-----------------|
-| 1) | Password Length (Client + Server side) | Minimum and maximum password length | ✓ | Length 8-16, React | Improve security |
-| 2) | Password Complexity (Client + Server side) | Include a combination of Uppercase letters, Lowercase letters, Numbers, Special characters (e.g. !, @, #, $) | ✓ | React function | Improve security |
-| 3) | Password History (Client + Server side) | Users cannot reuse their recent passwords. Store a history of previous passwords to prevent recycling | ✓ | By storing previous password | Improve security |
-| 4) | Password Expiry (Client + Server side) | Set a policy that prompts users to change their passwords periodically. For example, every 90 days (about 3 months). This mitigates the risk of compromised passwords | ✓ | New field to store password creation date | Improve security |
-| 5) | Account Lockout (Client + Server side) | Implement a mechanism that locks user accounts after a specified number of failed login attempts | ✓ | Client-side done after 3 attempts | Prevent brute-force attacks |
-| 6) | Password Strength Assessment (Client + Server side) | Provide users with real-time feedback on the strength of their chosen password during the registration or password change process. Indicate whether the password meets complex requirements | ✓ | Used react-password-strength-bar | User experience |
-| 7) | Design part | User-friendly interfaces for password changes | ✓ | React | User experience |
+| 1) | Password Length (Client + Server side) | Minimum and maximum password length | ✓ | Length 8-16, Vue with Vite | Improve security |
+| 2) | Password Complexity (Client + Server side) | Include a combination of Uppercase letters, Lowercase letters, Numbers, Special characters (e.g. !, @, #, $) | ✓ | Vue validation function | Improve security |
+| 3) | Password History (Client + Server side) | Users cannot reuse their recent passwords. Store a history of previous passwords to prevent recycling | ✓ | Django model with password history tracking | Improve security |
+| 4) | Password Expiry (Client + Server side) | Set a policy that prompts users to change their passwords periodically. For example, every 90 days (about 3 months). This mitigates the risk of compromised passwords | ✓ | Django model field with password expiry logic | Improve security |
+| 5) | Account Lockout (Client + Server side) | Implement a mechanism that locks user accounts after a specified number of failed login attempts | ✓ | Vue client-side UI + Django backend lockout logic | Prevent brute-force attacks |
+| 6) | Password Strength Assessment (Client + Server side) | Provide users with real-time feedback on the strength of their chosen password during the registration or password change process. Indicate whether the password meets complex requirements | ✓ | Vue password strength meter component | User experience |
+| 7) | Design part | User-friendly interfaces for password changes | ✓ | Vue with Vite | User experience |
 
 ## Audit Trail
 
