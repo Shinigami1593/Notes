@@ -48,3 +48,30 @@
 | 4) | Personal Information Protection | Email and phone numbers encrypted | ✓ | Cryptographic functions applied | Privacy protection |
 | 5) | Note Content Encryption | User notes encrypted before storage | ✓ | Encryption implemented in note models | Data confidentiality |
 | 6) | Key Management | Secure management of encryption keys | ✓ | Environment variables for keys | Prevent key exposure |
+
+## Payment
+
+| S.N. | Feature | Requirements | Implemented | How it was achieved | Why it was done |
+|------|---------|--------------|-------------|-------------------|-----------------|
+| 1) | Secure Payment Gateway Integration | Integrate with trusted payment providers (e.g., eSewa) | ✓ | eSewa API integration in Django backend | Secure transaction processing |
+| 2) | Payment Data Encryption | Encrypt sensitive payment information (card details, transaction IDs) | ✓ | HTTPS/TLS + encrypted fields in database | Protect payment data |
+| 3) | Transaction Logging | Log all payment transactions for auditing and fraud detection | ✓ | Transaction model with detailed logging | Track payment activities |
+| 4) | Payment Validation | Validate payment amounts and transaction details | ✓ | Django serializers and backend validation | Prevent fraud and errors |
+| 5) | Subscription Management | Track user subscriptions and premium status | ✓ | PremiumSubscription model in Django | Manage user access levels |
+| 6) | Billing History | Maintain detailed billing records for users | ✓ | BillingHistory model with transaction tracking | Audit and user transparency |
+| 7) | Payment Error Handling | Graceful handling of failed transactions | ✓ | Exception handling in payment views | User experience and security |
+
+## Extra Measures
+
+| S.N. | Feature | Requirements | Implemented | How it was achieved | Why it was done |
+|------|---------|--------------|-------------|-------------------|-----------------|
+| 1) | Two-Factor Authentication (2FA) | Implement multi-factor authentication for enhanced account security | ✓ | 2FA setup view with Vue component | Prevent unauthorized access |
+| 2) | Input Validation and Sanitization | Validate and sanitize all user inputs on client and server | ✓ | Vue validators + Django serializers | Prevent injection attacks |
+| 3) | Rate Limiting | Limit API requests to prevent brute force and DOS attacks | ✓ | Django throttling on API endpoints | Protect backend resources |
+| 4) | Security Headers | Implement security headers (X-Frame-Options, CSP, etc.) | ✓ | Django middleware configuration | Prevent XSS and clickjacking |
+| 5) | User Activity Logging | Log all user activities including login, logout, file uploads | ✓ | Audit trail system | Track and monitor user behavior |
+| 6) | API Authentication | Secure API endpoints with token-based authentication | ✓ | JWT tokens + DRF authentication classes | Secure API communication |
+| 7) | File Upload Security | Validate and restrict file uploads to prevent malicious uploads | ✓ | File type validation in Django | Prevent malware injection |
+| 8) | Data Backup and Recovery | Implement secure backup mechanisms | ✓ | Database backup procedures in place | Disaster recovery |
+| 9) | Dependency Management | Keep all packages and dependencies updated | ✓ | Requirements.txt with secure versions | Prevent known vulnerabilities |
+| 10) | Error Handling | Avoid exposing sensitive information in error messages | ✓ | Custom exception handlers | Prevent information disclosure |
